@@ -1,0 +1,41 @@
+[
+  {
+    "email": "john.doe@example.com",
+    "password": "hashed_password_123",
+    "role": "user",
+    "bikes": ["6543210abcdef", "987654321fedcba"],
+    "createdAt": "2024-07-24T10:00:00Z",
+    "updatedAt": "2024-07-24T10:00:00Z"
+  },
+  {
+    "email": "jane.smith@example.com",
+    "password": "another_hashed_password",
+    "role": "admin",
+    "bikes": ["abcdef123456789", "fedcba987654321", "123456789abcdef"],
+    "createdAt": "2024-07-24T12:30:00Z",
+    "updatedAt": "2024-07-24T12:30:00Z"
+  },
+  {
+    "email": "alice.johnson@example.com",
+    "password": "password321",
+    "role": "user",
+    "bikes": [],
+    "createdAt": "2024-07-25T08:00:00Z",
+    "updatedAt": "2024-07-25T08:00:00Z"
+  },
+  {
+    "owner": "6543210abcdef",
+    "availability": "available",
+    "location": "Some Location 1"
+  },
+  {
+    "owner": "987654321fedcba",
+    "availability": "rented",
+    "location": "Some Location 2"
+  },
+  {
+    "owner": "abcdef123456789",
+    "availability": "inMaintenance",
+    "location": "Some Location 3"
+  }
+]
