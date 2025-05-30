@@ -1,6 +1,7 @@
 import { useState } from "react";
-
+import { useBikeStore } from "../../store/useBikeStore";
 const BikesTableView = () => {
+  // const {bikes} = useBikeStore()
   // State for bikes data
   const [bikes, setBikes] = useState([
     {
@@ -27,7 +28,7 @@ const BikesTableView = () => {
     {
       id: 4,
       owner: "City Bikes",
-      availability: "In Maintenance",
+      availability: "Maintenance",
       user: "-",
       location: "Main Station, Boston",
     },
@@ -108,7 +109,7 @@ const BikesTableView = () => {
         return "bg-green-100 text-green-800";
       case "Rented":
         return "bg-blue-100 text-blue-800";
-      case "In Maintenance":
+      case "Maintenance":
         return "bg-yellow-100 text-yellow-800";
       default:
         return "bg-gray-100 text-gray-800";

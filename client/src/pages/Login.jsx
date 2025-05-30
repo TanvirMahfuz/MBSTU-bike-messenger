@@ -1,6 +1,46 @@
-import React from "react";
+import { useRef, useEffect } from "react";
+import { useUserStore } from "../store/useUserStore.js";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const { authUser, login, isLoading,error } = useUserStore();
+  const navigate = useNavigate();
+
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  useEffect(() => {
+    if (authUser) {
+      navigate("/");
+    }
+  }, [authUser, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+
+    try {
+      const res = await login(email, password);
+      if (error) {
+        console.log("error while logging in:", error);
+        return;
+      }
+      if (res){
+        console.log("Login successful");
+        navigate("/");
+      }
+        
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="text-center">Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -11,7 +51,7 @@ function Login() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -20,6 +60,7 @@ function Login() {
               </label>
               <div className="mt-1">
                 <input
+                  ref={emailRef}
                   id="email"
                   name="email"
                   type="email"
@@ -38,6 +79,7 @@ function Login() {
               </label>
               <div className="mt-1">
                 <input
+                  ref={passwordRef}
                   id="password"
                   name="password"
                   type="password"
@@ -75,12 +117,12 @@ function Login() {
             <div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Sign in
+                {isLoading ? "Signing in..." : "Sign in"}
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>

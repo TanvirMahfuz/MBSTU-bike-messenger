@@ -1,4 +1,5 @@
-import BikesTableView from "./BikesTableView";
+import BikesTableView from "./BikesTableVIew.jsx";
+import BikesTableViewTemp from "./BikesTableViewTemp.jsx";
 
 export default function BikesTableSection() {
   return (
@@ -13,6 +14,7 @@ export default function BikesTableSection() {
       </div>
       <div className="px-4 py-5 sm:p-6">
         <BikesTableView />
+        <BikesTableViewTemp/>
       </div>
     </div>
   );
