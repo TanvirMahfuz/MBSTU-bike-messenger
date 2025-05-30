@@ -4,6 +4,10 @@ import { generateToken } from "../../utility/tokenManger.js";
 export const loginUser = async (req,res) => {
   const { email, password } = req.body;
   try {
+    console.log("Login attempt with email:", email);
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -13,9 +17,12 @@ export const loginUser = async (req,res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
     const token = generateToken({ userId: user._id, email: user.email })
-    res.status(200).cookie("token",token).json({ message: "Login successful" });
+    const newUser = user.toObject();
+    delete newUser.password;
+    console.log("cookie token:", token);
+    res.status(200).cookie("token",token).json({ message: "Login successful",user:newUser });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

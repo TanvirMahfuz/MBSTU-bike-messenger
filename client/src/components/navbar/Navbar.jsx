@@ -20,7 +20,7 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="flex justify-between items-center px-4 py-2 bg-white shadow relative">
+    <nav className="flex justify-between items-center px-4 py-2 bg-gray-50 relative">
       <Link to="/">
         <img src="./src/assets/Logo.png" alt="Logo" height={50} width={50} />
       </Link>
@@ -43,7 +43,7 @@ function Navbar() {
                       to="/profile"
                       className="flex px-4 py-2 text-gray-700 hover:bg-gray-100 items-center gap-2"
                       onClick={() => setOpen(false)}>
-                        {profileIcon} {userName}
+                      {profileIcon} {userName}
                     </Link>
                   </li>
                   <li>

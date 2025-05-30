@@ -17,7 +17,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
@@ -42,11 +42,6 @@ if (process.env.NODE_ENV === "development") {
 
 // API routes
 app.use("/api/v1", router);
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "healthy" });
-});
 
 // 404 Handler
 app.use((req, res, next) => {

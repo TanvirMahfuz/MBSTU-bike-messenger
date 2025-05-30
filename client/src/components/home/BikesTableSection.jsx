@@ -13,7 +13,7 @@ export default function BikesTableSection() {
         </p>
       </div>
       <div className="px-4 py-5 sm:p-6">
-        <BikesTableView />
+        {/* <BikesTableView /> */}
         <BikesTableViewTemp/>
       </div>
     </div>
