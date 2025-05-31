@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../../store/useUserStore";
 import { profileIcon,dropDownKeyIcon,logOutIcon } from "../../assets/icons";
-
 function Navbar() {
-  const { authUser } = useUserStore();
+  const { authUser,logout } = useUserStore();
   const userName = authUser?.name ?? "Guest";
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -46,14 +45,16 @@ function Navbar() {
                       {profileIcon} {userName}
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/login"
-                      className="flex px-4 py-2 text-red-500 hover:bg-gray-100 items-center gap-2"
-                      onClick={() => setOpen(false)}>
+                  <li className="">
+                    <button
+                      className="flex px-6 py-2 text-red-500 hover:bg-gray-100 items-center gap-2"
+                      onClick={() => {
+                        logout()
+                        setOpen(false)
+                        }}>
                       {logOutIcon}
                       Logout
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>

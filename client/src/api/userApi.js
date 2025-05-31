@@ -9,6 +9,10 @@ export const loginUser = (email, password) =>
     { email, password },
     { withCredentials: true }
   ).then((res) => res.data);
+export const logoutUser = () =>
+  axios
+    .get(`${API}/user/log-out`, { withCredentials: true })
+    .then((res) => res.data);
 export const checkUser = () =>
     axios
       .get(

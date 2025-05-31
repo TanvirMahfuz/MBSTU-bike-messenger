@@ -5,7 +5,8 @@ import {
   readOneUser,
   loginUser,
   checkUser,
-  userProfile
+  userProfile,
+  logoutUser,
 } from "../controllers/user.controller/userController.js";
 const userRouter = Router();
 
@@ -15,5 +16,6 @@ userRouter.get("/profile", userProfile);
 userRouter.get("/oneUser/:id", readOneUser);
 userRouter.post("/registerUser", createUser);
 userRouter.post("/log-in", loginUser);
+userRouter.get("/log-out", logoutUser);
 
 export default userRouter;

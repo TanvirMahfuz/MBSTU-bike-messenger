@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { loginUser, fetchProfile,checkUser} from "../api/userApi";
+import { loginUser, fetchProfile,checkUser,logoutUser} from "../api/userApi";
 
 export const useUserStore = create((set) => ({
   authUser: null,
@@ -42,7 +42,18 @@ export const useUserStore = create((set) => ({
       return false
     }
   },
-  logout: () => set({ authUser: null, token: null }),
+  logout: () =>{
+    try {
+      logoutUser();
+      set({ authUser: null, token: null });
+      return true
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false })
+      return false 
+    }
+    
+  },
 
   loadProfile: async () => {
     set({ isLoading: true });
