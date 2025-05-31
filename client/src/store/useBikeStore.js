@@ -6,6 +6,7 @@ import {
   updateBike,
   deleteBike,
 } from "../api/bikeApi";
+import { useUserStore } from "./useUserStore";
 
 export const useBikeStore = create((set) => ({
   bikes: [],
@@ -32,11 +33,14 @@ export const useBikeStore = create((set) => ({
   },
 
   fetchBikeById: async (id) => {
+    console.log("Fetching bike by ID (zustand)...");
     set({ isLoading: true });
     try {
       const bike = await fetchBike(id);
+      console.log("Fetched bike:", bike);
       set({ bike, isLoading: false, error: null });
     } catch (error) {
+      console.log("Error fetching bike:", error);
       set({
         error: error.response?.data?.message || error.message,
         isLoading: false,
@@ -45,6 +49,7 @@ export const useBikeStore = create((set) => ({
   },
 
   addBike: async (bikeData) => {
+    console.log("Adding bike (zustand)...");
     set({ isLoading: true });
     try {
       const newBike = await createBike(bikeData);
@@ -53,11 +58,15 @@ export const useBikeStore = create((set) => ({
         isLoading: false,
         error: null,
       }));
+      useUserStore.getState().check();
+      return true
     } catch (error) {
+      console.log(error)
       set({
         error: error.response?.data?.message || error.message,
         isLoading: false,
       });
+      return false;
     }
   },
 

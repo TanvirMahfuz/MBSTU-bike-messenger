@@ -19,6 +19,6 @@ export const checkUser = () =>
 export const fetchProfile = (token) =>
   axios
     .get(`${API}/user/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
+      withCredentials:true
     })
     .then((res) => res.data);

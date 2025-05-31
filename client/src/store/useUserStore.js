@@ -47,8 +47,7 @@ export const useUserStore = create((set) => ({
   loadProfile: async () => {
     set({ isLoading: true });
     try {
-      const token = useUserStore.getState().token;
-      const user = await fetchProfile(token);
+      const authUser = await fetchProfile(token);
       set({ authUser, isLoading: false });
     } catch (err) {
       set({ error: err.message, isLoading: false });

@@ -3,4 +3,12 @@ import { readAllUsers } from "./readAll.js";
 import { readOneUser } from "./readOne.js";
 import { loginUser } from "./login.js";
 import { checkUser } from "./check.js";
-export { createUser, readAllUsers, readOneUser,loginUser,checkUser };
+import { userProfile } from "./userProfile.js";
+export {
+  createUser,
+  readAllUsers,
+  readOneUser,
+  loginUser,
+  checkUser,
+  userProfile,
+};

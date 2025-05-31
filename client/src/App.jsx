@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from './components/navbar/Navbar';
+import Profile from './pages/Profile';
 import { useUserStore } from './store/useUserStore';
 function App() {
   const { authUser, check } = useUserStore();
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
       </Routes>
       </BrowserRouter>
     </>

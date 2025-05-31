@@ -3,82 +3,79 @@ import User from "../../models/user.model.js";
 
 export const createBike = async (req, res) => {
   try {
-    const {location,minuteRate} = req.body;
-    const owner = req.user.userId;
-    console.log(owner);
-    // Validate required fields
-    if (!owner || !location  || !minuteRate) {
+    const { location, minuteRate } = req.body;
+    const ownerId = req.user?.userId;
+
+    // Early validation
+    if (!ownerId || !location || !minuteRate) {
       return res.status(400).json({
         success: false,
-        message: "Owner, location, and useTime are required fields",
+        message: "location, minuteRate are required and you must be logged in",
         errorType: "MISSING_FIELDS",
       });
     }
 
-    // Validate owner exists
-    const ownerExists = await User.exists({ _id: owner });
-    if (!ownerExists) {
+    const rate = parseFloat(minuteRate);
+    if (isNaN(rate) || rate <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Minute rate must be a positive number",
+        errorType: "INVALID_MINUTE_RATE",
+      });
+    }
+
+    // Fetch full user document to access bikes array
+    const ownerUser = await User.findById(ownerId).lean();
+    if (!ownerUser) {
       return res.status(404).json({
         success: false,
         message: "Owner user not found",
         errorType: "OWNER_NOT_FOUND",
       });
     }
-    // Validate minuteRate is a positive number
-    if (minuteRate <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Minute rate must be a positive number",
-        errorType: "INVALID_MINUTE_RATE"
-      })
-    }
 
-    // Create new bike
-    const newBike = new Bikes({
-      owner,
+    // if (ownerUser.bikes?.length > 0) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "You already have a bike",
+    //     errorType: "ALREADY_HAVE_BIKE",
+    //   });
+    // }
+
+    // Create and save bike
+    const newBike = await Bikes.create({
+      owner: ownerId,
       location,
-      minuteRate,
+      minuteRate: rate,
     });
 
-    // Save to database
-    await newBike.save();
+    // Update user's bikes array
+    await User.findByIdAndUpdate(ownerId, {
+      $push: { bikes: newBike._id },
+    });
 
-    // Populate owner details in response (lean for better performance)
+    // Populate owner data in response
     const createdBike = await Bikes.findById(newBike._id)
-      .populate("owner", "email _id") // Only include necessary fields
-      .populate("user", "email _id") // Only include necessary fields
+      .populate("owner", "email _id")
       .lean();
-
+    console.log("Created bike:", createdBike);
     return res.status(201).json({
       success: true,
       message: "Bike created successfully",
-      data: {
-        ...createdBike,
-        // Remove any sensitive data that might have been included
-        owner: { _id: createdBike.owner._id, email: createdBike.owner.email },
-        user: createdBike.user
-          ? {
-              _id: createdBike.user._id,
-              email: createdBike.user.email,
-            }
-          : null,
-      },
+      data: createdBike,
     });
   } catch (error) {
     console.error("Error creating bike:", error);
 
-    // Handle validation errors
     if (error.name === "ValidationError") {
-      const errors = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({
         success: false,
         message: "Validation error",
-        errors,
+        errors: Object.values(error.errors).map((e) => e.message),
         errorType: "VALIDATION_ERROR",
       });
     }
 
-    // Handle duplicate key errors
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
@@ -87,7 +84,6 @@ export const createBike = async (req, res) => {
       });
     }
 
-    // Handle CastError (invalid ObjectId)
     if (error.name === "CastError") {
       return res.status(400).json({
         success: false,
@@ -96,7 +92,6 @@ export const createBike = async (req, res) => {
       });
     }
 
-    // Generic error handler
     return res.status(500).json({
       success: false,
       message: "Internal server error",

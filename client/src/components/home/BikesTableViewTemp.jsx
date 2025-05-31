@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 function BikesGrid() {
   const { bikes, fetchAllBikes, isLoading } = useBikeStore();
-
+  console.log("Bikes:", bikes);
   useEffect(() => {
     fetchAllBikes();
   }, [fetchAllBikes]);

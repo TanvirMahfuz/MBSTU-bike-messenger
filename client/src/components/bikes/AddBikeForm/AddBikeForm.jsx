@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useBikeStore } from "../../../store/useBikeStore";
 import LocationInput from "./LocationInput";
 import MinuteRateInput from "./MinuteRateInput";
 import SubmitButton from "./SubmitButton";
@@ -10,14 +10,19 @@ export default function AddBikeForm() {
     location: "",
     minuteRate: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const { addBike, isLoading, error } = useBikeStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    console.log(formData)
+    try {
+      console.log("Adding bike:", formData);
+      await addBike(formData);
+      setFormData({ location: "", minuteRate: "" }); 
+    } catch (err) {
+      console.error("Error adding bike:", err);
+      
+    }
   };
 
   const handleChange = (e) => {
@@ -31,7 +36,7 @@ export default function AddBikeForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <LocationInput value={formData.location} onChange={handleChange} />
         <MinuteRateInput value={formData.minuteRate} onChange={handleChange} />
-        <SubmitButton loading={loading} />
+        <SubmitButton loading={isLoading} />
         {error && <ErrorDisplay message={error} />}
       </form>
     </div>

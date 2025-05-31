@@ -1,31 +1,34 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-
+import { useBikeStore } from "../../../store/useBikeStore";
 import LocationInput from "./LocationInput";
 import MinuteRateInput from "./MinuteRateInput";
 import SubmitButton from "./SubmitButton";
 import ErrorDisplay from "./ErrorDisplay";
 
-const AddBikeModal = ({ onClose, onSubmit }) => {
+const AddBikeModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
     location: "",
     minuteRate: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { addBike, isLoading, error } = useBikeStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
     try {
-      await onSubmit(formData);
-      onClose();
+      console.log("Adding bike:", formData);
+      const res = await addBike(formData);
+      if (res){
+        console.log("Bike added successfully!");
+        onClose();
+        setFormData({ location: "", minuteRate: "" });
+      }
+      else {
+        console.log("Error adding bike:", error);
+      }
     } catch (err) {
-      setError(err.message || "Failed to add bike");
-    } finally {
-      setLoading(false);
+      console.error("Error adding bike:", err);
+      onClose()
     }
   };
 
@@ -72,7 +75,7 @@ const AddBikeModal = ({ onClose, onSubmit }) => {
                   className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Cancel
                 </button>
-                <SubmitButton loading={loading} />
+                <SubmitButton loading={isLoading} />
               </div>
             </form>
           </div>
@@ -84,7 +87,6 @@ const AddBikeModal = ({ onClose, onSubmit }) => {
 
 AddBikeModal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default AddBikeModal;

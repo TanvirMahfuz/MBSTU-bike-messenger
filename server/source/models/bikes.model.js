@@ -7,6 +7,10 @@ const bikesSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    image: {
+      type: String,
+      required: false,
+    },
     availability: {
       type: String,
       enum: ["available", "rented", "inMaintenance"],
