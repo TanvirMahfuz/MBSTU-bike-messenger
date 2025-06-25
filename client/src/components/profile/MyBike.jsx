@@ -4,19 +4,21 @@ import { useUserStore } from "../../store/useUserStore";
 
 function MyBike() {
   const { fetchBikeById, bike, error } = useBikeStore();
-  const { authUser } = useUserStore();
+  const { authUser, getUserBikes, authUserBikes } = useUserStore();
 
   useEffect(() => {
     if (authUser?.bikes?.[0]) {
       fetchBikeById(authUser.bikes[0]);
+      getUserBikes(authUser.bikes);
     }
+    
   }, [authUser]);
 
   return (
     <>
       {error && alert(error)}
-      {bike ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-2xl shadow-md p-6 w-full max-w-4xl mx-auto text-left">
+      {authUserBikes.length > 0 ? authUserBikes.map((bike) => 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-2xl shadow-md mt-6 p-6 w-full max-w-4xl mx-auto text-left">
           {/* Bike Details */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-800">Your Bike</h3>

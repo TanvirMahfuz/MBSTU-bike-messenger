@@ -12,7 +12,7 @@ function Home() {
       )}
       <div className="max-w-7xl mx-auto">
         <HeroSection {...{ openModal, setOpenModal }} />
-        <StatsSection />
+        {/* <StatsSection /> */}
         <BikesTableSection />
       </div>
     </div>

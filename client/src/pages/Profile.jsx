@@ -5,7 +5,6 @@ import MyBike from "../components/profile/MyBike";
 function Profile() {
   const { authUser } = useUserStore();
   const bike = authUser?.bikes?.[0]; // assuming one bike per user
-  console.log("bike", bike);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-50">
       {/* Profile Card */}

@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import { loginUser, fetchProfile,checkUser,logoutUser} from "../api/userApi";
+import { fetchBike } from "../api/bikeApi";
 
 export const useUserStore = create((set) => ({
   authUser: null,
   token: null,
   isLoading: false,
   error: null,
+  authUserBikes: [],
 
-  check: async ()=>{
+  check: async () => {
     try {
       const response = await checkUser();
       set({
@@ -33,26 +35,25 @@ export const useUserStore = create((set) => ({
         isLoading: false,
         error: null,
       });
-      return true
+      return true;
     } catch (err) {
       set({
         error: err.response?.data?.message || err.message,
         isLoading: false,
       });
-      return false
+      return false;
     }
   },
-  logout: () =>{
+  logout: () => {
     try {
       logoutUser();
       set({ authUser: null, token: null });
-      return true
+      return true;
     } catch (error) {
       console.log(error);
-      set({ error: error.message, isLoading: false })
-      return false 
+      set({ error: error.message, isLoading: false });
+      return false;
     }
-    
   },
 
   loadProfile: async () => {
@@ -62,6 +63,22 @@ export const useUserStore = create((set) => ({
       set({ authUser, isLoading: false });
     } catch (err) {
       set({ error: err.message, isLoading: false });
+    }
+  },
+
+  getUserBikes: async (bikes) => {
+    set({ isLoading: true });
+    console.log("Fetching bikes for user: ", bikes);
+    try {
+      let arr = Promise.all(bikes.map(async (bikeId) => {
+        const bike = await fetchBike(bikeId);
+        return bike;
+      }));
+      arr = await arr;
+      set({ authUserBikes:arr, isLoading: false, error: null });
+      return true;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
     }
   },
 }));

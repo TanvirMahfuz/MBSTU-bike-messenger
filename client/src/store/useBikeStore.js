@@ -33,11 +33,11 @@ export const useBikeStore = create((set) => ({
   },
 
   fetchBikeById: async (id) => {
-    console.log("Fetching bike by ID (zustand)...");
+    // console.log("Fetching bike by ID (zustand)...");
     set({ isLoading: true });
     try {
       const bike = await fetchBike(id);
-      console.log("Fetched bike:", bike);
+      // console.log("Fetched bike:", bike);
       set({ bike, isLoading: false, error: null });
     } catch (error) {
       console.log("Error fetching bike:", error);
