@@ -45,7 +45,7 @@ export const createRent = async (req, res) => {
       });
     }
 
-    // Check for existing active rentals for this bike
+    // Check for existing active rentals
     const existingRental = await Rent.findOne({
       bike: bikeId,
       status: { $in: ["ongoing", "pending"] },
@@ -59,7 +59,7 @@ export const createRent = async (req, res) => {
       });
     }
 
-    // Create new rental record
+    // Create rental and update bike without using a transaction
     const newRental = new Rent({
       bike: bikeId,
       user: userId,
@@ -67,38 +67,24 @@ export const createRent = async (req, res) => {
       status: "ongoing",
     });
 
-    // Start transaction
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    await newRental.save();
 
-    try {
-      await newRental.save({ session });
+    bike.availability = "rented";
+    bike.user = userId;
+    await bike.save();
 
-      // Update bike status and set current user
-      bike.availability = "rented";
-      bike.user = userId;
-      await bike.save({ session });
-
-      await session.commitTransaction();
-
-      return res.status(201).json({
-        success: true,
-        message: "Rental created successfully",
-        data: {
-          rentalId: newRental._id,
-          bikeId: bike._id,
-          userId: user._id,
-          startDate: newRental.startDate,
-          minuteRate: bike.minuteRate,
-          bikeStatus: bike.availability,
-        },
-      });
-    } catch (transactionError) {
-      await session.abortTransaction();
-      throw transactionError;
-    } finally {
-      session.endSession();
-    }
+    return res.status(201).json({
+      success: true,
+      message: "Rental created successfully",
+      data: {
+        rentalId: newRental._id,
+        bikeId: bike._id,
+        userId: user._id,
+        startDate: newRental.startDate,
+        minuteRate: bike.minuteRate,
+        bikeStatus: bike.availability,
+      },
+    });
   } catch (error) {
     console.error("Rental creation error:", error);
 
