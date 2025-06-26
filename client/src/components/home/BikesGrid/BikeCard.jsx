@@ -49,11 +49,19 @@ function BikeCard({ bike, onRentClick, className = "" }) {
 
       {/* Action Button */}
       <div className="w-full">
-        <button
-          onClick={() => onRentClick(bike)}
-          className="w-full bg-sky-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition-colors duration-300">
-          Rent
-        </button>
+        {bike.availability == "available" ? (
+          <button
+            onClick={() => onRentClick(bike)}
+            className="w-full bg-sky-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition-colors duration-300">
+            Rent
+          </button>
+        ) : (
+          <button
+            disabled = {true}
+            className="w-full bg-gray-500 text-white px-4 py-1 rounded-md hover:bg-gray-600 transition-colors duration-300">
+            Rent
+          </button>
+        )}
       </div>
     </div>
   );

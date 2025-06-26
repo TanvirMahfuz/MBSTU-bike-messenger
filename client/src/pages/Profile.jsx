@@ -1,13 +1,12 @@
 import {useEffect} from "react";
 import { useUserStore } from "../store/useUserStore";
-
+import RentedBike from "../components/profile/rentedBike/RentedBike";
 import MyBike from "../components/profile/MyBike";
 function Profile() {
   const { authUser } = useUserStore();
-  const bike = authUser?.bikes?.[0]; // assuming one bike per user
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-50">
-      {/* Profile Card */}
+      
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm text-center mb-8">
         <img
           src={authUser?.image ?? "../src/assets/Logo.png"}
@@ -27,8 +26,9 @@ function Profile() {
         </p>
       </div>
 
-      {/* Bike Info */}
       <MyBike/>
+
+      <RentedBike />
     </div>
   );
 }

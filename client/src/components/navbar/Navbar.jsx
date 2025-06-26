@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../../store/useUserStore";
-import { profileIcon,dropDownKeyIcon,logOutIcon } from "../../assets/icons";
+import { profileIcon,dropDownKeyIcon,logOutIcon } from "../../assets/icons";;
+
 function Navbar() {
   const { authUser,logout } = useUserStore();
   const userName = authUser?.name ?? "Guest";

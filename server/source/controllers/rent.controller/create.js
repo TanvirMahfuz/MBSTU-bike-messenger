@@ -26,6 +26,16 @@ export const createRent = async (req, res) => {
       });
     }
 
+    const isUserBlocked = await Rent.findOne({
+      user: userId,status: "ongoing"})
+    if (isUserBlocked) {
+      return res.status(403).json({
+        success: false,
+        message: "User is already renting bikes",
+        errorType: "USER_BLOCKED",
+      });
+    }
+
     // Check bike exists and is available
     const bike = await Bikes.findById(bikeId);
     if (!bike) {

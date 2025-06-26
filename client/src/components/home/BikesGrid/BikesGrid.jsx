@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 import { useBikeStore } from "../../../store/useBikeStore";
+import { useRentStore } from "../../../store/useRentStore";
 import BikeCard from "./BikeCard";
 
 function BikesGrid() {
   const { bikes, fetchAllBikes, isLoading } = useBikeStore();
-  console.log("Bikes:", bikes);
+  const { createRent, rentCompletion } = useRentStore();
+
   useEffect(() => {
     fetchAllBikes();
-  }, [fetchAllBikes]);
+  }, []);
+
   const onRentClick = (bike) => {
-    console.log("Renting bike with:",bike);
-    // console.log(`Bike ID: ${bike._id}, Location: ${bike.location}`);
+    createRent({ bikeId: bike._id });
   };
+
   return (
     <div className="p-6 bg-gradient-to-br from-blue-50 via-white to-purple-100 rounded-2xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Available Bikes</h1>

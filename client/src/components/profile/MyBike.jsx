@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useBikeStore } from "../../store/useBikeStore";
 import { useUserStore } from "../../store/useUserStore";
-
+import { useRentStore } from "../../store/useRentStore";
 function MyBike() {
-  const { fetchBikeById, bike, error } = useBikeStore();
+  const { fetchBikeById, error } = useBikeStore();
   const { authUser, getUserBikes, authUserBikes } = useUserStore();
-
+  const { getRentedBikeOfUser } = useRentStore();
   useEffect(() => {
     if (authUser?.bikes?.[0]) {
       fetchBikeById(authUser.bikes[0]);
@@ -18,7 +18,7 @@ function MyBike() {
     <>
       {error && alert(error)}
       {authUserBikes.length > 0 ? authUserBikes.map((bike) => 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-2xl shadow-md mt-6 p-6 w-full max-w-4xl mx-auto text-left">
+        <div key={bike._id} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-2xl shadow-md mt-6 p-6 w-full max-w-4xl mx-auto text-left">
           {/* Bike Details */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-800">Your Bike</h3>

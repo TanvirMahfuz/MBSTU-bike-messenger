@@ -8,24 +8,13 @@ import Profile from './pages/Profile';
 import { useUserStore } from './store/useUserStore';
 function App() {
   const { authUser, check } = useUserStore();
-
   useEffect(()=>{
-    const checkUser = async () => {
-      const isAuthenticated = await check();
-      if (isAuthenticated) {
-        console.log("User is authenticated:", authUser);
-      } else {
-        console.log("User is not authenticated");
-      }
-    };
-    if (!authUser) {
-      checkUser();
+    console.log("App mounted. calling validator");
+    async function validateUser() {
+      const user = await check();
     }
-    else {
-      console.log("User is already authenticated:", authUser);
-    }
-  },[])
-  
+    validateUser();
+  },[check])
   return (
     <>
       <BrowserRouter>
